@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Groupie Trackers</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1> Groupie Trackers</h1>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="/">← Back to Home</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Search Section -->
+        <section class="search-section">
+            <form action="/search" method="get" class="search-form">
+                <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="Search by artist name, member, year, or album..." 
+                    value="{{.Query}}"
+                    required
+                    class="search-input"
+                >
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </section>
+
+        <!-- Results -->
+        <section class="results-section">
+            <h2>Search Results for "{{.Query}}"</h2>
+            <p class="results-count">Found {{.ResultsCount}} result{{if ne .ResultsCount 1}}s{{end}}</p>
+
+            {{if .Artists}}
+                <div class="artists-grid">
+                    {{range .Artists}}
+                    <div class="artist-card">
+                        <a href="/artist/{{.ID}}" class="artist-link">
+                            <div class="artist-image">
+                                <img src="{{.Image}}" alt="{{.Name}}">
+                            </div>
+                            <div class="artist-info">
+                                <h3>{{.Name}}</h3>
+                                <p class="artist-meta">
+                                    <span class="meta-item">👥 {{len .Members}} member{{if ne (len .Members) 1}}s{{end}}</span>
+                                    <span class="meta-item">📅 Since {{.CreationDate}}</span>
+                                </p>
+                                <p class="artist-album">🎸 First Album: {{.FirstAlbum}}</p>
+                            </div>
+                        </a>
+                    </div>
+                    {{end}}
+                </div>
+            {{else}}
+                <div class="no-results">
+                    <h3>No results found</h3>
+                    <p>Try searching with different keywords.</p>
+                    <a href="/" class="btn btn-primary">View All Artists</a>
+                </div>
+            {{end}}
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Groupie Trackers. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
