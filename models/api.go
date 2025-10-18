@@ -119,5 +119,14 @@ func LoadArtistsFromAPI() error {
 
 	// Assign the slice from the wrapper to the global locations variable
 	Data.Artists = response
+	RemoveInappropriatePic()
 	return nil
+}
+
+func RemoveInappropriatePic() {
+	for i := range Data.Artists {
+		if Data.Artists[i].ID == 21 {
+			Data.Artists[i].Image = "/assets/images/%E2%9D%8C.png"
+		}
+	}
 }

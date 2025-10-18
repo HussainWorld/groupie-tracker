@@ -17,9 +17,11 @@ var tmpl = template.Must(template.ParseFiles(
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// tmpl := template.Must(template.ParseFiles("templates/index.html"))
+	// models.RemoveInappropriatePic()
 	view := models.IndexData{
 		Artists: models.Data.Artists,
 	}
+
 	err := tmpl.ExecuteTemplate(w, "index.html", view)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

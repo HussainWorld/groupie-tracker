@@ -8,3 +8,7 @@ EOF
 
 # GO
 go.mod
+
+
+# Macbook
+.DS_Store
