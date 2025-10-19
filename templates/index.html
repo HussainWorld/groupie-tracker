@@ -1,108 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Groupie Trackers - Discover Artists</title>
-<link rel="stylesheet" href="/assets/style.css">
-</head>
-<body>
-<header>
-<div class="container">
-<h1>🎵 Groupie Trackers</h1>
-<p class="tagline">Discover your favorite artists and their concerts</p>
-</div>
-</header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groupie Trackers - Discover Artists</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
 
-<main class="container">
-<!-- Search Section -->
-<section class="search-section">
-    <a id="homeBtn" href="/" class="btn btn-primary home-btn">Home</a>
-    <form action="/search" method="get" class="search-form">
-        <input
+  <body>
+    <header>
+      <div class="container">
+        <h1>🎵 Groupie Trackers</h1>
+        <p class="tagline">
+          Discover your favorite artists and their concerts
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Search Section -->
+      <section class="search-section">
+        <a id="homeBtn" href="/" class="btn btn-primary home-btn">Home</a>
+        <form action="/search" method="get" class="search-form">
+          <input
             type="text"
             name="q"
             placeholder="Search by artist name, member, year, or album..."
             required
             class="search-input"
-        >
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-</section>
+          />
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </section>
 
-<!-- Filter Section -->
-<section class="filter-section">
-<details>
-<summary class="filter-toggle">Advanced Filters</summary>
-<form action="/filter" method="post" class="filter-form">
-<div class="filter-grid">
-<div class="filter-group">
-<label for="minYear">Creation Year (Min)</label>
-<input type="number" id="minYear" name="minYear" min="1900" max="2025" placeholder="e.g., 1990">
-</div>
-<div class="filter-group">
-<label for="maxYear">Creation Year (Max)</label>
-<input type="number" id="maxYear" name="maxYear" min="1900" max="2025" placeholder="e.g., 2020">
-</div>
-<div class="filter-group">
-<label for="minMembers">Min Members</label>
-<input type="number" id="minMembers" name="minMembers" min="1" max="20" placeholder="e.g., 3">
-</div>
-<div class="filter-group">
-<label for="maxMembers">Max Members</label>
-<input type="number" id="maxMembers" name="maxMembers" min="1" max="20" placeholder="e.g., 7">
-</div>
-<div class="filter-group filter-location">
-<label for="location">Location</label>
-<input type="text" id="location" name="location" placeholder="e.g., paris, new york">
-</div>
-</div>
-<div class="filter-actions">
-<button type="submit" class="btn btn-secondary">Apply Filters</button>
-<a href="/" class="btn btn-outline">Clear Filters</a>
-</div>
-</form>
-</details>
-</section>
+      <!-- Filter Section -->
+      <section class="filter-section">
+        <details>
+          <summary class="filter-toggle">Advanced Filters</summary>
+          <form action="/filter" method="post" class="filter-form">
+            <div class="filter-grid">
+              <div class="filter-group">
+                <label for="minYear">Creation Year (Min)</label>
+                <input
+                  type="number"
+                  id="minYear"
+                  name="minYear"
+                  min="1900"
+                  max="2025"
+                  placeholder="e.g., 1990"
+                />
+              </div>
 
-<!-- Artists Grid -->
-<section class="artists-section">
-{{if .Artists}}
-<h2>All Artists ({{len .Artists}})</h2>
-<div class="artists-grid">
-{{range .Artists}}
-<div class="artist-card">
-<a href="/artist/{{.ID}}" class="artist-link">
-<div class="artist-image">
-<img src="{{.Image}}" alt="{{.Name}}">
-</div>
-<div class="artist-info">
-<h3>{{.Name}}</h3>
-<p class="artist-meta">
-<span class="meta-item">👥 {{len .Members}} member{{if ne (len .Members) 1}}s{{end}}</span>
-<span class="meta-item">📅 Since {{.CreationDate}}</span>
-</p>
-<p class="artist-album">🎸 First Album: {{.FirstAlbum}}</p>
-</div>
-</a>
-</div>
-{{end}}
-</div>
-{{else}}
-<div class="no-results">
-<h2>No artists found</h2>
-<p>Try adjusting your filters or search criteria.</p>
-<a href="/" class="btn btn-primary">View All Artists</a>
-</div>
-{{end}}
-</section>
-</main>
+              <div class="filter-group">
+                <label for="maxYear">Creation Year (Max)</label>
+                <input
+                  type="number"
+                  id="maxYear"
+                  name="maxYear"
+                  min="1900"
+                  max="2025"
+                  placeholder="e.g., 2020"
+                />
+              </div>
 
-<footer>
-<div class="container">
-<p>&copy; 2025 Groupie Trackers. All rights reserved.</p>
-<p>Data provided by Groupie Trackers API</p>
-</div>
-</footer>
-</body>
+              <div class="filter-group">
+                <label for="minMembers">Min Members</label>
+                <input
+                  type="number"
+                  id="minMembers"
+                  name="minMembers"
+                  min="1"
+                  max="20"
+                  placeholder="e.g., 3"
+                />
+              </div>
+
+              <div class="filter-group">
+                <label for="maxMembers">Max Members</label>
+                <input
+                  type="number"
+                  id="maxMembers"
+                  name="maxMembers"
+                  min="1"
+                  max="20"
+                  placeholder="e.g., 7"
+                />
+              </div>
+
+              <div class="filter-group filter-location">
+                <label for="location">Location</label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  placeholder="e.g., paris, new york"
+                />
+              </div>
+            </div>
+
+            <div class="filter-actions">
+              <button type="submit" class="btn btn-secondary">
+                Apply Filters
+              </button>
+              <a href="/" class="btn btn-outline">Clear Filters</a>
+            </div>
+          </form>
+        </details>
+      </section>
+
+      <!-- Artists Grid -->
+      <section class="artists-section">
+        {{if .Artists}}
+        <h2>All Artists ({{len .Artists}})</h2>
+
+        <div class="artists-grid">
+          {{range .Artists}}
+          <div class="artist-card">
+            <a href="/artist/{{.ID}}" class="artist-link">
+              <div class="artist-image">
+                <img src="{{.Image}}" alt="{{.Name}}" />
+              </div>
+
+              <div class="artist-info">
+                <h3>{{.Name}}</h3>
+                <p class="artist-meta">
+                  <span class="meta-item">
+                    👥 {{len .Members}} member{{if ne (len .Members) 1}}s{{end}}
+                  </span>
+                  <span class="meta-item">
+                    📅 Since {{.CreationDate}}
+                  </span>
+                </p>
+                <p class="artist-album">
+                  🎸 First Album: {{.FirstAlbum}}
+                </p>
+              </div>
+            </a>
+          </div>
+          {{end}}
+        </div>
+
+        {{else}}
+        <div class="no-results">
+          <h2>No artists found</h2>
+          <p>Try adjusting your filters or search criteria.</p>
+          <a href="/" class="btn btn-primary">View All Artists</a>
+        </div>
+        {{end}}
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Groupie Trackers. All rights reserved.</p>
+        <p>Data provided by Groupie Trackers API</p>
+      </div>
+    </footer>
+  </body>
 </html>

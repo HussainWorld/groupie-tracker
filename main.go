@@ -13,26 +13,81 @@ import (
 var tmpl = template.Must(template.ParseFiles(
 	"templates/index.html",
 	"templates/artist.html",
+	"templates/error.html",
 ))
+
+type ErrorView struct {
+	StatusCode int
+	Error      string
+}
+
+func renderError(w http.ResponseWriter, status int, publicMsg string, logErr error) {
+
+	if logErr != nil {
+		log.Printf("HTTP %d: %s | err=%v", status, publicMsg, logErr)
+	} else {
+		log.Printf("HTTP %d: %s", status, publicMsg)
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(status)
+
+	_ = tmpl.ExecuteTemplate(w, "error.html", ErrorView{
+		StatusCode: status,
+		Error:      publicMsg,
+	})
+}
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// tmpl := template.Must(template.ParseFiles("templates/index.html"))
 	// models.RemoveInappropriatePic()
+
+	// handle wrong route
+	if r.URL.Path != "/" {
+		renderError(w, http.StatusNotFound, "Page not found", nil)
+		return
+	}
+
+	// handle bad request
+	if r.Method != http.MethodGet {
+		renderError(w, http.StatusBadRequest, "Bad Request: only GET is allowed", nil)
+		return
+	}
+
+	// handle missing data from api
+	if len(models.Data.Artists) == 0 {
+		renderError(w, http.StatusNotFound, "No artists found", nil)
+		return
+	}
+
 	view := models.IndexData{
 		Artists: models.Data.Artists,
 	}
 
 	err := tmpl.ExecuteTemplate(w, "index.html", view)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		renderError(w, http.StatusInternalServerError, "Internal Server Error", err)
 	}
 }
 
 func artistHandler(w http.ResponseWriter, r *http.Request) {
-	idStr := strings.TrimPrefix(r.URL.Path, "/artist/")
+
+	if r.Method != http.MethodGet {
+		renderError(w, http.StatusBadRequest, "Bad Request: only GET is allowed", nil)
+		return
+	}
+
+	path := strings.TrimSuffix(r.URL.Path, "/")
+	parts := strings.Split(path, "/")
+	// Expected parts: ["", "artist", "{id}"]
+	if len(parts) != 3 || parts[1] != "artist" || parts[2] == "" {
+		renderError(w, http.StatusNotFound, "Page not found", nil)
+		return
+	}
+	idStr := parts[2]
 	id, err := strconv.Atoi(idStr)
 	if err != nil || id <= 0 {
-		http.NotFound(w, r)
+		renderError(w, http.StatusBadRequest, "Bad Request: invalid artist id", err)
 		return
 	}
 
@@ -44,7 +99,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if artist == nil {
-		http.NotFound(w, r)
+		renderError(w, http.StatusNotFound, "Artist not found", nil)
 		return
 	}
 
@@ -91,7 +146,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = tmpl.ExecuteTemplate(w, "artist.html", view)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		renderError(w, http.StatusInternalServerError, "Internal Server Error", err)
 	}
 }
 
