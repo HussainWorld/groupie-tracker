@@ -67,6 +67,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
+
 	if artist == nil {
 		renderError(w, http.StatusNotFound, "Artist not found", nil)
 		return
