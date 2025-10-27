@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Artist.Name}} - Groupie Trackers</title>
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎵 Groupie Trackers</h1>
+            <p class="tagline">Discover your favorite artists and their concerts</p>
+        </div>
+    </header>
+
+    <div class="container back-bar">
+        <a href="/" class="btn btn-outline back-link">← Back to Artists</a>
+    </div>
+
+    <main class="container">
+        <article class="artist-detail">
+            <!-- Artist Header -->
+            <div class="artist-header">
+                <div class="artist-header-image">
+                    <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+                </div>
+                <div class="artist-header-info">
+                    <h1 class="artist-name">{{.Artist.Name}}</h1>
+                    <div class="artist-stats">
+                        <div class="stat">
+                            <span class="stat-label">Formed</span>
+                            <span class="stat-value">{{.Artist.CreationDate}}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">First Album</span>
+                            <span class="stat-value">{{.Artist.FirstAlbum}}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Members</span>
+                            <span class="stat-value">{{len .Artist.Members}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Members Section -->
+            <section class="detail-section">
+                <h2>👥 Band Members</h2>
+                <ul class="members-list">
+                    {{range .Artist.Members}}
+                    <li class="member-item">{{.}}</li>
+                    {{end}}
+                </ul>
+            </section>
+
+            <!-- Concert Information -->
+            <div class="concert-info">
+                <!-- Locations -->
+                <section class="detail-section">
+                    <h2>📍 Concert Locations</h2>
+                    {{if .Locations}}
+                    <div class="locations-grid">
+                        {{range .Locations}}
+                        <div class="location-badge">{{.}}</div>
+                        {{end}}
+                    </div>
+                    {{else}}
+                    <p class="no-data">No location data available.</p>
+                    {{end}}
+                </section>
+
+                <!-- Dates -->
+                <section class="detail-section">
+                    <h2>📅 Concert Dates</h2>
+                    {{if .Dates}}
+                    <div class="dates-list">
+                        {{range .Dates}}
+                        <div class="date-item">{{.}}</div>
+                        {{end}}
+                    </div>
+                    {{else}}
+                    <p class="no-data">No concert dates available.</p>
+                    {{end}}
+                </section>
+            </div>
+
+            <!-- Relations (Dates-Locations) -->
+            {{if .Relation.DatesLocations}}
+            <section class="detail-section">
+                <h2>🎫 Concert Schedule</h2>
+                <div class="relations-container">
+                    {{range $location, $dates := .Relation.DatesLocations}}
+                    <details class="relation-item">
+                        <summary class="relation-location">
+                            📍 {{$location}} <span class="concert-count">({{len $dates}} concert{{if ne (len $dates) 1}}s{{end}})</span>
+                        </summary>
+                        <ul class="relation-dates">
+                            {{range $dates}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+                    </details>
+                    {{end}}
+                </div>
+            </section>
+            {{end}}
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Groupie Trackers. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

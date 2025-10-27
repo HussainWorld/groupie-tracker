@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groupie Trackers - Discover Artists</title>
+    <link rel="stylesheet" href="/assets/style.css">
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <h1>🎵 Groupie Trackers</h1>
+        <p class="tagline">
+          Discover your favorite artists and their concerts
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <!-- Artists Grid -->
+      <section class="artists-section">
+        {{if .Artists}}
+        <h2>All Artists ({{len .Artists}})</h2>
+
+        <div class="artists-grid">
+          {{range .Artists}}
+          <div class="artist-card">
+            <a href="/artist/{{.ID}}" class="artist-link">
+              <div class="artist-image">
+                <img src="{{.Image}}" alt="{{.Name}}" />
+              </div>
+
+              <div class="artist-info">
+                <h3>{{.Name}}</h3>
+                <p class="artist-meta">
+                  <span class="meta-item">
+                    👥 {{len .Members}} member{{if ne (len .Members) 1}}s{{end}}
+                  </span>
+                  <span class="meta-item">
+                    📅 Since {{.CreationDate}}
+                  </span>
+                </p>
+                <p class="artist-album">
+                  🎸 First Album: {{.FirstAlbum}}
+                </p>
+              </div>
+            </a>
+          </div>
+          {{end}}
+        </div>
+
+        {{else}}
+        <div class="no-results">
+          <h2>No artists found</h2>
+          <p>Try adjusting your filters or search criteria.</p>
+          <a href="/" class="btn btn-primary">View All Artists</a>
+        </div>
+        {{end}}
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Groupie Trackers. All rights reserved.</p>
+        <p>Data provided by Groupie Trackers API</p>
+      </div>
+    </footer>
+  </body>
+</html>

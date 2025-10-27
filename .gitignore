@@ -1,0 +1,13 @@
+cat >> .gitignore << 'EOF'
+
+# Air
+.air.toml
+tmp/
+*_templ.go
+EOF
+
+# GO
+go.mod
+
+# Macbook
+.DS_Store
